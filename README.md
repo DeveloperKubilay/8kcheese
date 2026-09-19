@@ -99,8 +99,3 @@ python export_qualities.py --preset all
 
 ---
 
-## 🤖 GitHub Actions CI/CD
-
-When a tag is pushed (e.g., `git tag v1.0.0 && git push origin v1.0.0`), the included `.github/workflows/release.yml` workflow automatically sets up the environment and publishes all video tiers to GitHub Releases.
-
-Make sure to add `PEXELS_API_KEY` to your **Repository Secrets** if you want automated pipeline builds in GitHub Actions.
