@@ -14,11 +14,13 @@ Compare the visual quality of each compression tier before downloading. All rele
 
 | Tier | Size | Bitrate | Preview Sample (15s) | Direct Download |
 |---|---|---|:---:|---|
-| **Compact** | ~50 MB | ~7 kbps | ![Compact Preview](assets/preview-50mb.gif) | [Download 50MB](../../releases/latest) |
-| **Light** | ~80 MB | ~11 kbps | ![80MB Preview](assets/preview-80mb.gif) | [Download 80MB](../../releases/latest) |
-| **Standard** | ~100 MB | ~14 kbps | ![Standard Preview](assets/preview-100mb.gif) | [Download 100MB](../../releases/latest) |
-| **Enhanced** | ~120 MB | ~17 kbps | ![120MB Preview](assets/preview-120mb.gif) | [Download 120MB](../../releases/latest) |
-| **Master** | ~217 MB | ~32 kbps | ![Master Preview](assets/preview-full.gif) | [Download 217MB](../../releases/latest) |
+| **Compact** | ~50 MB | ~7 kbps | ![Compact Preview](assets/preview-50mb.gif) | [📥 Download 50MB (MP4)](https://github.com/DeveloperKubilay/8kcheese/releases/download/1.0.0/cheese-50mb.mp4) |
+| **Light** | ~80 MB | ~11 kbps | ![80MB Preview](assets/preview-80mb.gif) | [📥 Download 80MB (MP4)](https://github.com/DeveloperKubilay/8kcheese/releases/download/1.0.0/cheese-80mb.mp4) |
+| **Standard** | ~100 MB | ~14 kbps | ![Standard Preview](assets/preview-100mb.gif) | [📥 Download 100MB (MP4)](https://github.com/DeveloperKubilay/8kcheese/releases/download/1.0.0/cheese-100mb.mp4) |
+| **Enhanced** | ~120 MB | ~17 kbps | ![120MB Preview](assets/preview-120mb.gif) | [📥 Download 120MB (MP4)](https://github.com/DeveloperKubilay/8kcheese/releases/download/1.0.0/cheese-120mb.mp4) |
+| **Master** | ~217 MB | ~32 kbps | ![Master Preview](assets/preview-full.gif) | [📥 Download 217MB (MP4)](https://github.com/DeveloperKubilay/8kcheese/releases/download/1.0.0/cheese-full-217mb.mp4) |
+
+> 🏷️ All versions and release assets can also be browsed at the [1.0.0 Release Page](https://github.com/DeveloperKubilay/8kcheese/releases/tag/1.0.0).
 
 ---
 
