@@ -15,10 +15,10 @@ Compare the visual quality of each compression tier before downloading. All rele
 | Tier | Size | Bitrate | Preview Sample (15s) | Direct Download |
 |---|---|---|:---:|---|
 | **Compact** | ~50 MB | ~7 kbps | ![Compact Preview](assets/preview-50mb.gif) | [Download 50MB](../../releases/latest) |
+| **Light** | ~80 MB | ~11 kbps | ![80MB Preview](assets/preview-80mb.gif) | [Download 80MB](../../releases/latest) |
 | **Standard** | ~100 MB | ~14 kbps | ![Standard Preview](assets/preview-100mb.gif) | [Download 100MB](../../releases/latest) |
+| **Enhanced** | ~120 MB | ~17 kbps | ![120MB Preview](assets/preview-120mb.gif) | [Download 120MB](../../releases/latest) |
 | **Master** | ~217 MB | ~32 kbps | ![Master Preview](assets/preview-full.gif) | [Download 217MB](../../releases/latest) |
-
-> Additional intermediate tiers (80MB and 120MB) are also published under [GitHub Releases](../../releases).
 
 ---
 
