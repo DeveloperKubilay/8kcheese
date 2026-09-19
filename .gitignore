@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+
+# Environment variables & secrets
+.env
+.env.local
+
+# Project data & generated assets
+photos/
+verified/
+rejected/
+frames/
+blue_screens/
+clips/
+test/
+output/*.mp4
+output/*.mkv
+output/*.avi
+!output/.gitkeep
+clips_list.txt
+concat_list.txt
+*.log
+
+# OS & IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
