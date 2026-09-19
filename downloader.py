@@ -4,10 +4,17 @@ import time
 import requests
 from concurrent.futures import ThreadPoolExecutor
 
-API_KEY = os.getenv("PEXELS_API_KEY", "")
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 PHOTOS_DIR = os.path.join(BASE_DIR, "photos")
 TARGET_COUNT = 10000
+
+# Load from environment or local .env
+API_KEY = os.getenv("PEXELS_API_KEY", "")
+if not API_KEY and os.path.exists(os.path.join(BASE_DIR, ".env")):
+    with open(os.path.join(BASE_DIR, ".env")) as f:
+        for line in f:
+            if line.startswith("PEXELS_API_KEY="):
+                API_KEY = line.strip().split("=", 1)[1].strip("\"' ")
 
 SEARCH_TERMS = [
     "cheese", "cheddar", "brie", "gouda", "mozzarella",
