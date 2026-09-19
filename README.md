@@ -8,15 +8,17 @@ An automated end-to-end media pipeline that downloads, verifies, formats, and re
 
 ---
 
-## 📦 Downloads (GitHub Releases)
+## 📦 Quality Tiers & Previews
 
-Because Git repositories have strict file size limits, the final rendered videos are distributed via [GitHub Releases](../../releases). Choose the version that best fits your bandwidth and storage:
+Compare the visual quality of each compression tier before downloading. All releases feature the complete 15.6-hour countdown.
 
-| Tier | File Size | Bitrate / Description | Download |
-|---|---|---|---|
-| **Compact** | ~50 MB | Optimized 480p equivalent, lowest bandwidth | [Download 50MB](../../releases/latest) |
-| **Standard** | ~100 MB | Balanced quality for everyday playback | [Download 100MB](../../releases/latest) |
-| **Full / Original** | ~217 MB | Full original master render (15.6 hours) | [Download 217MB](../../releases/latest) |
+| Tier | Size | Bitrate | Preview Sample (15s) | Direct Download |
+|---|---|---|:---:|---|
+| **Compact** | ~50 MB | ~7 kbps | ![Compact Preview](assets/preview-50mb.gif) | [Download 50MB](../../releases/latest) |
+| **Standard** | ~100 MB | ~14 kbps | ![Standard Preview](assets/preview-100mb.gif) | [Download 100MB](../../releases/latest) |
+| **Master** | ~217 MB | ~32 kbps | ![Master Preview](assets/preview-full.gif) | [Download 217MB](../../releases/latest) |
+
+> Additional intermediate tiers (80MB and 120MB) are also published under [GitHub Releases](../../releases).
 
 ---
 
