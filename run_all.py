@@ -7,19 +7,23 @@ import argparse
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 STEPS = [
-    ("download", "downloader.py", "Download Images"),
-    ("classify", "classifier.py", "Verify & Filter Images"),
+    ("download", "downloader.py", "Download Cat Images (Pexels API)"),
+    ("classify", "classifier.py", "AI Verify & Chonk Sorter (YOLOv8 ONNX)"),
     ("frames", "frame_builder.py", "Build Animation Frames"),
-    ("video", "video_builder.py", "Render & Concatenate Video"),
+    ("video", "video_builder.py", "Render & Concatenate Cat Video"),
 ]
 
 
-def run_step(script_name, label):
+def run_step(script_name, label, extra_args=None):
     path = os.path.join(BASE_DIR, script_name)
     print(f"\n--- [{label}] Starting {script_name} ---")
     start = time.time()
 
-    res = subprocess.run([sys.executable, path], cwd=BASE_DIR)
+    cmd = [sys.executable, path]
+    if extra_args:
+        cmd.extend(extra_args)
+
+    res = subprocess.run(cmd, cwd=BASE_DIR)
     elapsed = time.time() - start
 
     if res.returncode != 0:
@@ -31,11 +35,12 @@ def run_step(script_name, label):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Run the cheese video generation pipeline.")
+    parser = argparse.ArgumentParser(description="Run the 10,000 Cats video generation pipeline.")
     parser.add_argument("--skip-download", action="store_true", help="Skip image downloading")
     parser.add_argument("--skip-classify", action="store_true", help="Skip classification/verification")
     parser.add_argument("--skip-frames", action="store_true", help="Skip frame generation")
     parser.add_argument("--skip-video", action="store_true", help="Skip video building")
+    parser.add_argument("--clean", action="store_true", help="Clean/backup existing photos and start a fresh cat pipeline")
     args = parser.parse_args()
 
     skip_map = {
@@ -52,7 +57,8 @@ def main():
             print(f"Skipping step: {label} (--skip-{key})")
             continue
 
-        if not run_step(script, label):
+        extra_args = ["--clean"] if (args.clean and key in ["download", "classify"]) else []
+        if not run_step(script, label, extra_args):
             print(f"\nPipeline halted at stage: {label}")
             sys.exit(1)
 

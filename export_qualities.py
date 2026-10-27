@@ -6,38 +6,59 @@ import argparse
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(BASE_DIR, "output")
-SOURCE_FILE = os.path.join(OUTPUT_DIR, "10000_cheese.mp4")
+SOURCE_FILE = os.path.join(OUTPUT_DIR, "10000_cats.mp4")
+LEGACY_SOURCE_FILE = os.path.join(OUTPUT_DIR, "10000_cheese.mp4")
 ASSETS_DIR = os.path.join(BASE_DIR, "assets")
 
 PRESETS = {
     "compact": {
-        "filename": "cheese-top8000-compact-50mb.mp4",
-        "crf": "42",
+        "filename": "cats-50mb.mp4",
+        "crf": "48",
         "preset": "veryfast",
         "desc": "Ultra-compact build (~50MB)"
     },
     "standard": {
-        "filename": "cheese-top8000-standard-100mb.mp4",
-        "crf": "37",
+        "filename": "cats-100mb.mp4",
+        "crf": "33",
         "preset": "veryfast",
         "desc": "Standard balance (~100MB)"
     },
     "full": {
-        "filename": "cheese-top8000-full-200mb.mp4",
-        "desc": "Original high quality (~217MB)"
+        "filename": "cats-full.mp4",
+        "crf": "35",
+        "preset": "veryfast",
+        "desc": "Master build (~181MB)"
     }
 }
 
 
+def get_active_source():
+    if os.path.exists(OUTPUT_DIR):
+        cat_videos = [f for f in os.listdir(OUTPUT_DIR) if f.endswith("_cats.mp4") and os.path.isfile(os.path.join(OUTPUT_DIR, f))]
+        if cat_videos:
+            cat_videos.sort(key=lambda x: os.path.getsize(os.path.join(OUTPUT_DIR, x)), reverse=True)
+            return os.path.join(OUTPUT_DIR, cat_videos[0])
+    if os.path.exists(SOURCE_FILE):
+        return SOURCE_FILE
+    if os.path.exists(LEGACY_SOURCE_FILE):
+        return LEGACY_SOURCE_FILE
+    return SOURCE_FILE
+
+
 def create_preview():
+    src = get_active_source()
+    if not os.path.exists(src):
+        print(f"Error: Source video not found at {src}")
+        return
+
     os.makedirs(ASSETS_DIR, exist_ok=True)
     gif_path = os.path.join(ASSETS_DIR, "preview.gif")
-    print("Generating 15s preview gif...")
+    print(f"Generating 15s preview gif from {os.path.basename(src)}...")
 
     cmd = [
         "ffmpeg", "-y",
         "-ss", "00:00:10", "-t", "15",
-        "-i", SOURCE_FILE,
+        "-i", src,
         "-vf", "fps=10,scale=256:256:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse",
         gif_path
     ]
@@ -49,8 +70,9 @@ def create_preview():
 
 
 def export_preset(name):
-    if not os.path.exists(SOURCE_FILE):
-        print(f"Error: Base video not found at {SOURCE_FILE}")
+    src = get_active_source()
+    if not os.path.exists(src):
+        print(f"Error: Base video not found at {src}")
         sys.exit(1)
 
     cfg = PRESETS[name]
@@ -58,17 +80,18 @@ def export_preset(name):
 
     if name == "full":
         print(f"Exporting {name} ({cfg['desc']})...")
-        shutil.copy2(SOURCE_FILE, dest)
+        shutil.copy2(src, dest)
         print(f"Created: {dest}")
         return
 
     print(f"Transcoding {name} ({cfg['desc']})...")
     cmd = [
         "ffmpeg", "-y",
-        "-i", SOURCE_FILE,
+        "-i", src,
         "-c:v", "libx264",
         "-crf", cfg["crf"],
         "-preset", cfg["preset"],
+        "-threads", "12",
         "-pix_fmt", "yuv420p",
         dest
     ]
@@ -81,7 +104,7 @@ def export_preset(name):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Export release tiers and preview.")
+    parser = argparse.ArgumentParser(description="Export release tiers and preview for cat video.")
     parser.add_argument("--preset", choices=["compact", "standard", "full", "all"], default="all")
     parser.add_argument("--preview", action="store_true", help="Only generate preview gif")
     args = parser.parse_args()

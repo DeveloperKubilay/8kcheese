@@ -28,6 +28,12 @@ clips_list.txt
 concat_list.txt
 *.log
 
+# AI Models & Metadata
+models/*.onnx
+!models/.gitkeep
+cat_metadata.json
+verified_cats.json
+
 # OS & IDE
 .DS_Store
 Thumbs.db

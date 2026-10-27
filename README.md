@@ -1,50 +1,60 @@
-# 🧀 Top 8000 Cheese Video Generator
+# 🐱 Top 10,000 Cats Video Generator
 
-An automated end-to-end media pipeline that downloads, verifies, formats, and renders an epic 15+ hour countdown video featuring thousands of unique cheeses.
+An automated end-to-end media pipeline powered by **local lightweight AI (YOLOv8 via ONNX Runtime)** that downloads, verifies, sorts by chonkiness (fat cats first!), and renders an epic 15+ hour countdown video featuring thousands of verified cats.
 
 <p align="center">
-  <img src="assets/preview.gif" alt="Cheese Video Preview" width="320" />
+  <img src="assets/preview.gif" alt="Cat Video Preview" width="320" />
 </p>
 
 ---
 
 ## 📦 Quality Tiers & Previews
 
-Compare the visual quality of each compression tier before downloading. All releases feature the complete 15.6-hour countdown.
+All versions feature the complete cat countdown starting with the chonkiest cats, styled with the classic blue countdown cards and smooth cross-dissolve transitions.
 
-| Tier | Size | Bitrate | Preview Sample (15s) | Direct Download |
-|---|---|---|:---:|---|
-| **Compact** | ~50 MB | ~7 kbps | ![Compact Preview](assets/preview-50mb.gif) | [📥 Download 50MB (MP4)](https://github.com/DeveloperKubilay/8kcheese/releases/download/1.0.0/cheese-50mb.mp4) |
-| **Light** | ~80 MB | ~11 kbps | ![80MB Preview](assets/preview-80mb.gif) | [📥 Download 80MB (MP4)](https://github.com/DeveloperKubilay/8kcheese/releases/download/1.0.0/cheese-80mb.mp4) |
-| **Standard** | ~100 MB | ~14 kbps | ![Standard Preview](assets/preview-100mb.gif) | [📥 Download 100MB (MP4)](https://github.com/DeveloperKubilay/8kcheese/releases/download/1.0.0/cheese-100mb.mp4) |
-| **Enhanced** | ~120 MB | ~17 kbps | ![120MB Preview](assets/preview-120mb.gif) | [📥 Download 120MB (MP4)](https://github.com/DeveloperKubilay/8kcheese/releases/download/1.0.0/cheese-120mb.mp4) |
-| **Master** | ~217 MB | ~32 kbps | ![Master Preview](assets/preview-full.gif) | [📥 Download 217MB (MP4)](https://github.com/DeveloperKubilay/8kcheese/releases/download/1.0.0/cheese-full-217mb.mp4) |
-
-> 🏷️ All versions and release assets can also be browsed at the [1.0.0 Release Page](https://github.com/DeveloperKubilay/8kcheese/releases/tag/1.0.0).
+| Tier | Size | Bitrate | Description |
+|---|---|---|---|
+| **Compact** | ~50 MB | ~7 kbps | Ultra-compact build (`cats-50mb.mp4`) |
+| **Standard** | ~100 MB | ~14 kbps | Standard balance (`cats-100mb.mp4`) |
+| **Full** | ~217 MB | ~32 kbps | Full original master render (`cats-full.mp4`) |
 
 ---
 
 ## 🚀 Pipeline Architecture
 
-The project runs in 4 sequential stages orchestrated by `run_all.py`:
+The pipeline runs in 4 stages orchestrated by `run_all.py`:
 
 ```
-Pexels API ──> [downloader.py] ──> photos/
+Pexels API ──> [downloader.py] ──> photos/ (Fat cats, Breeds, Colors)
                                       │
                                       ▼
-                               [classifier.py] ──> verified/
+                        [classifier.py] (YOLOv8n ONNX AI)
                                       │
-                                      ▼
-                              [video_builder.py] ──> clips/ ──> output/10000_cheese.mp4
-                                                                     │
-                                                                     ▼
-                                                          [export_qualities.py] ──> Releases
+                   ┌──────────────────┴──────────────────┐
+                   ▼                                     ▼
+         verified/ (Cats Only)                 rejected/ (Non-cats filtered)
+                   │
+                   ▼ (Sorted: Chonkiness score descending)
+         [video_builder.py] ──> clips/ ──> output/10000_cats.mp4
+                                                 │
+                                                 ▼
+                                     [export_qualities.py] ──> Releases
 ```
 
-1. **Downloader (`downloader.py`)**: Fetches thousands of unique cheese photos concurrently using the Pexels API with automatic rate-limit backoff.
-2. **Classifier (`classifier.py`)**: Validates image headers and dimensions, filtering out broken or tiny assets.
-3. **Video Builder (`video_builder.py`)**: Generates blue transition count cards and produces micro-clips with smooth cross-dissolve transitions using FFmpeg.
-4. **Export Qualities (`export_qualities.py`)**: Transcodes master outputs into compact (50MB), standard (100MB), and full (200MB) release artifacts.
+1. **Downloader (`downloader.py`)**: Fetches candidates across curated categories:
+   - **Fat & Chonky Cats**: *fat cat, chubby cat, chonky cat, round cat, fat orange cat, fluffy loaf*
+   - **Breeds**: *British Shorthair, Scottish Fold, Maine Coon, Persian, Ragdoll, Bengal, Sphynx...*
+   - **Colors & Patterns**: *Orange tabby, Calico, Tuxedo, Black cat, White cat...*
+   - **Cute Poses**: *Cat loaf, Sleeping cat, Cute kitten, Funny cat, Box cat...*
+2. **AI Classifier (`classifier.py`)**:
+   - Uses local **YOLOv8n ONNX** (Class 15: `cat`) running on CPU via `onnxruntime` (~10ms/image).
+   - **100% Cat Guarantee**: Rejects any photo that doesn't clearly contain a real cat (no more random humans, plates, or backgrounds).
+   - **Chonkiness Ranking**: Computes an aspect ratio and bounding box coverage score so the fattest, roundest cats appear first.
+3. **Video Builder (`video_builder.py`)**:
+   - **Classic Blue Screen & Smooth Crossfades**: Generates the iconic blue countdown cards (`Number: {number}`) on `(0, 100, 200)` RGB background. Transitions smoothly via a 1.0s crossfade: 1s fade-in, 2s blue card hold, 1s crossfade dissolve into the verified cat portrait, 2s cat hold, and 1s fade-out (7.0s per item).
+   - Produces micro-clips in parallel across all CPU cores and stitches them into `output/10000_cats.mp4`.
+4. **Export Qualities (`export_qualities.py`)**:
+   - Transcodes master output into Compact (50MB), Standard (100MB), and Full (200MB) release artifacts.
 
 ---
 
@@ -52,30 +62,19 @@ Pexels API ──> [downloader.py] ──> photos/
 
 ### Prerequisites
 - Python 3.9+
-- [FFmpeg](https://ffmpeg.org/) installed and available in your system `PATH`
+- [FFmpeg](https://ffmpeg.org/) installed and available in system `PATH`
 - Pexels API Key ([Get a free key here](https://www.pexels.com/api/))
 
 ### Installation
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/DeveloperKubilay/8kcheese.git
-   cd 8kcheese
-   ```
-
-2. Install dependencies:
+1. Install dependencies:
    ```bash
    pip install -r requirements.txt
    ```
 
-3. Set up your API key:
+2. Set up your API key in `.env`:
    ```bash
-   cp .env.example .env
-   # Edit .env and insert your PEXELS_API_KEY
-   ```
-   Or export it in your shell:
-   ```bash
-   export PEXELS_API_KEY="your_api_key_here"
+   PEXELS_API_KEY="your_api_key_here"
    ```
 
 ---
@@ -87,20 +86,17 @@ To run the complete pipeline from scratch:
 python run_all.py
 ```
 
+To backup existing legacy files and run a fresh 10,000 cat build:
+```bash
+python run_all.py --clean
+```
+
 You can skip stages if intermediate assets already exist:
 ```bash
 python run_all.py --skip-download --skip-classify
 ```
 
-To transcode release tiers and generate preview assets:
+To transcode release tiers:
 ```bash
 python export_qualities.py --preset all
 ```
-
----
-
-## 🤖 GitHub Actions CI/CD
-
-When a tag is pushed (e.g., `git tag v1.0.0 && git push origin v1.0.0`), the included `.github/workflows/release.yml` workflow automatically sets up the environment and publishes all video tiers to GitHub Releases.
-
-Make sure to add `PEXELS_API_KEY` to your **Repository Secrets** if you want automated pipeline builds in GitHub Actions.
