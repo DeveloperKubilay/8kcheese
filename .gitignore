@@ -25,6 +25,10 @@ output/*.mkv
 output/*.avi
 output/*.zip
 !output/.gitkeep
+*.mp3
+*.wav
+*.aac
+*.m4a
 clips_list.txt
 concat_list.txt
 *.log
