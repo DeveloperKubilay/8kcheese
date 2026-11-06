@@ -10,15 +10,15 @@ An automated end-to-end media pipeline powered by **local lightweight AI (YOLOv8
 
 ## 📦 Quality Tiers & Previews
 
-All versions feature the complete cat countdown starting with the chonkiest cats, styled with the classic blue countdown cards and smooth cross-dissolve transitions.
+Compare the visual quality of each compression tier before downloading. All releases feature the complete 15-hour countdown.
 
-| Tier | Size | Bitrate | Description | Download |
-|---|---|---|---|---|
-| **Compact** | ~46 MB | ~7 kbps | Ultra-compact build (`cats-50mb.mp4`) | [📥 Download 50MB](https://github.com/DeveloperKubilay/8kcheese/releases/download/v2.0.0-cats/cats-50mb.mp4) |
-| **Standard** | ~107 MB | ~14 kbps | Standard balance (`cats-100mb.mp4`) | [📥 Download 100MB](https://github.com/DeveloperKubilay/8kcheese/releases/download/v2.0.0-cats/cats-100mb.mp4) |
-| **Full** | ~181 MB | ~27 kbps | Full original master render (`cats-full.mp4`) | [📥 Download Master](https://github.com/DeveloperKubilay/8kcheese/releases/download/v2.0.0-cats/cats-full.mp4) |
+| Tier | Size | Bitrate | Preview Sample (15s) | Direct Download |
+|---|---|---|:---:|---|
+| **Compact** | ~46 MB | ~7 kbps | ![Compact Preview](assets/preview-50mb.gif) | [📥 Download 50MB (MP4)](https://github.com/DeveloperKubilay/8kcheese/releases/download/v2.0.0-cats/cats-50mb.mp4) |
+| **Standard** | ~107 MB | ~14 kbps | ![Standard Preview](assets/preview-100mb.gif) | [📥 Download 100MB (MP4)](https://github.com/DeveloperKubilay/8kcheese/releases/download/v2.0.0-cats/cats-100mb.mp4) |
+| **Master** | ~181 MB | ~27 kbps | ![Master Preview](assets/preview-full.gif) | [📥 Download 181MB (MP4)](https://github.com/DeveloperKubilay/8kcheese/releases/download/v2.0.0-cats/cats-full.mp4) |
 
-> 📦 All versions and release assets are available at the [v2.0.0-cats Release Page](https://github.com/DeveloperKubilay/8kcheese/releases/tag/v2.0.0-cats).
+> 🏷️ All versions and release assets can also be browsed at the [v2.0.0-cats Release Page](https://github.com/DeveloperKubilay/8kcheese/releases/tag/v2.0.0-cats).
 
 ---
 

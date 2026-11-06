@@ -28,7 +28,10 @@ FILES_TO_UPLOAD = [
     os.path.join(OUTPUT_DIR, "cats-100mb.mp4"),
     os.path.join(OUTPUT_DIR, "cats-50mb.mp4"),
     os.path.join(OUTPUT_DIR, "cats-full.mp4"),
-    os.path.join(ASSETS_DIR, "preview.gif")
+    os.path.join(ASSETS_DIR, "preview.gif"),
+    os.path.join(ASSETS_DIR, "preview-50mb.gif"),
+    os.path.join(ASSETS_DIR, "preview-100mb.gif"),
+    os.path.join(ASSETS_DIR, "preview-full.gif")
 ]
 
 

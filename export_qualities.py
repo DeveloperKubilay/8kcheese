@@ -68,6 +68,20 @@ def create_preview():
     else:
         print("Failed to generate preview gif.")
 
+    # Also generate tier previews if the tier videos exist
+    for tier, cfg in PRESETS.items():
+        tier_video = os.path.join(OUTPUT_DIR, cfg["filename"])
+        if os.path.exists(tier_video):
+            tier_gif = os.path.join(ASSETS_DIR, f"preview-{cfg['filename'].split('.')[0].replace('cats-', '')}.gif")
+            cmd_tier = [
+                "ffmpeg", "-y",
+                "-ss", "00:00:10", "-t", "15",
+                "-i", tier_video,
+                "-vf", "fps=10,scale=256:256:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse",
+                tier_gif
+            ]
+            subprocess.run(cmd_tier, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, cwd=BASE_DIR)
+
 
 def export_preset(name):
     src = get_active_source()
