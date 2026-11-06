@@ -12,11 +12,13 @@ An automated end-to-end media pipeline powered by **local lightweight AI (YOLOv8
 
 All versions feature the complete cat countdown starting with the chonkiest cats, styled with the classic blue countdown cards and smooth cross-dissolve transitions.
 
-| Tier | Size | Bitrate | Description |
-|---|---|---|---|
-| **Compact** | ~50 MB | ~7 kbps | Ultra-compact build (`cats-50mb.mp4`) |
-| **Standard** | ~100 MB | ~14 kbps | Standard balance (`cats-100mb.mp4`) |
-| **Full** | ~217 MB | ~32 kbps | Full original master render (`cats-full.mp4`) |
+| Tier | Size | Bitrate | Description | Download |
+|---|---|---|---|---|
+| **Compact** | ~46 MB | ~7 kbps | Ultra-compact build (`cats-50mb.mp4`) | [📥 Download 50MB](https://github.com/DeveloperKubilay/8kcheese/releases/download/v2.0.0-cats/cats-50mb.mp4) |
+| **Standard** | ~107 MB | ~14 kbps | Standard balance (`cats-100mb.mp4`) | [📥 Download 100MB](https://github.com/DeveloperKubilay/8kcheese/releases/download/v2.0.0-cats/cats-100mb.mp4) |
+| **Full** | ~181 MB | ~27 kbps | Full original master render (`cats-full.mp4`) | [📥 Download Master](https://github.com/DeveloperKubilay/8kcheese/releases/download/v2.0.0-cats/cats-full.mp4) |
+
+> 📦 All versions and release assets are available at the [v2.0.0-cats Release Page](https://github.com/DeveloperKubilay/8kcheese/releases/tag/v2.0.0-cats).
 
 ---
 

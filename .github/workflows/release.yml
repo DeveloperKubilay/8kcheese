@@ -49,10 +49,10 @@ jobs:
 
       - name: Export Quality Tiers (If Output Exists)
         run: |
-          if [ -f "output/10000_cheese.mp4" ]; then
+          if [ -f "output/10000_cats.mp4" ]; then
             python export_qualities.py --preset all
           else
-            echo "output/10000_cheese.mp4 not found in workspace (expected for fresh clones)."
+            echo "output/10000_cats.mp4 not found in workspace (expected for fresh clones)."
           fi
 
       - name: Publish GitHub Release
@@ -60,13 +60,13 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch'
         with:
           tag_name: ${{ github.event.inputs.tag_name || github.ref_name }}
-          name: Cheese Top 8000 Release ${{ github.event.inputs.tag_name || github.ref_name }}
+          name: Top 10,000 Cats Release ${{ github.event.inputs.tag_name || github.ref_name }}
           draft: false
           prerelease: false
           files: |
-            output/cheese-top8000-compact-50mb.mp4
-            output/cheese-top8000-standard-100mb.mp4
-            output/cheese-top8000-full-200mb.mp4
+            output/cats-50mb.mp4
+            output/cats-100mb.mp4
+            output/cats-full.mp4
             assets/preview.gif
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
