@@ -7,9 +7,8 @@ from concurrent.futures import ThreadPoolExecutor
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 PHOTOS_DIR = os.path.join(BASE_DIR, "photos")
-METADATA_FILE = os.path.join(BASE_DIR, "cat_metadata.json")
-# Target 16,000 candidates so that 66% YOLO verification rate yields 10,000+ verified pure cats
-TARGET_COUNT = 16000
+METADATA_FILE = os.path.join(BASE_DIR, "food_metadata.json")
+TARGET_COUNT = 14000
 
 # Load from environment or local .env
 API_KEY = os.getenv("PEXELS_API_KEY", "")
@@ -19,32 +18,116 @@ if not API_KEY and os.path.exists(os.path.join(BASE_DIR, ".env")):
             if line.startswith("PEXELS_API_KEY="):
                 API_KEY = line.strip().split("=", 1)[1].strip("\"' ")
 
-# Categorized search terms for 10k cats pipeline
+# Categorized search terms for Top 10,000 Turkish Foods
 SEARCH_CATEGORIES = {
-    "fat_cats": [
-        "fat cat", "chubby cat", "chonky cat", "round cat", "fat orange cat",
-        "fluffy fat cat", "chubby british shorthair", "fat lazy cat", "big round cat",
-        "chonky kitten", "chubby kitten", "chunky cat", "round fat cat", "overweight cat",
-        "fat white cat", "fat black cat", "giant cat", "fluffy cat loaf", "fat tabby cat"
+    "kebabs_and_meats": [
+        ("Turkish kebab", "Kebap"),
+        ("Adana kebab", "Adana Kebap"),
+        ("Urfa kebab", "Urfa Kebap"),
+        ("Iskender kebab", "İskender Kebap"),
+        ("shish kebab", "Şiş Kebap"),
+        ("doner kebab", "Döner"),
+        ("shawarma kebab", "Et Döner"),
+        ("cig kofte", "Çiğ Köfte"),
+        ("Turkish kofte", "Köfte"),
+        ("meatballs Turkish", "Izgara Köfte"),
+        ("cag kebabi", "Cağ Kebabı"),
+        ("beyti kebab", "Beyti"),
+        ("sac tava", "Sac Tava"),
+        ("kuzu tandir", "Kuzu Tandır"),
+        ("kokorec", "Kokoreç"),
+        ("ali nazik", "Ali Nazik"),
+        ("tas kebabi", "Tas Kebabı"),
+        ("etli ekmek", "Etli Ekmek"),
+        ("hunkar begendi", "Hünkar Beğendi")
     ],
-    "breeds": [
-        "british shorthair cat", "scottish fold cat", "maine coon cat", "persian cat",
-        "ragdoll cat", "siamese cat", "bengal cat", "norwegian forest cat", "sphynx cat",
-        "russian blue cat", "munchkin cat", "abyssinian cat", "birman cat", "devon rex cat",
-        "chartreux cat", "siberian cat", "turkish van cat", "turkish angora cat",
-        "exotic shorthair", "himalayan cat", "oriental shorthair", "ragdoll kitten",
-        "maine coon kitten", "persian kitten", "scottish fold kitten", "british shorthair kitten",
-        "siamese kitten", "bengal kitten", "burmese cat", "egyptian mau", "somali cat"
+    "baked_and_street_food": [
+        ("lahmacun", "Lahmacun"),
+        ("Turkish pide", "Pide"),
+        ("borek", "Börek"),
+        ("su boregi", "Su Böreği"),
+        ("simit", "Simit"),
+        ("Turkish bagel", "Susamlı Simit"),
+        ("gozleme", "Gözleme"),
+        ("pogaca", "Poğaça"),
+        ("acma", "Açma"),
+        ("tantuni", "Tantuni"),
+        ("balik ekmek", "Balık Ekmek"),
+        ("midye dolma", "Midye Dolma"),
+        ("Turkish flatbread", "Bazlama"),
+        ("lavas", "Lavaş"),
+        ("kumru sandwich", "Kumru"),
+        ("boyoz", "Boyoz"),
+        ("karisik tost", "Kaşarlı Tost")
     ],
-    "colors_patterns": [
-        "orange tabby cat", "ginger cat", "calico cat", "tuxedo cat", "black cat",
-        "white cat", "tortoiseshell cat", "grey tabby cat", "bicolor cat",
-        "fluffy white cat", "fluffy black cat", "ginger tabby", "tabby kitten"
+    "home_stews_and_dishes": [
+        ("kuru fasulye", "Kuru Fasulye"),
+        ("sarma", "Yaprak Sarma"),
+        ("stuffed grape leaves", "Zeytinyağlı Sarma"),
+        ("dolma", "Biber Dolması"),
+        ("stuffed peppers", "Etli Dolma"),
+        ("karniyarik", "Karnıyarık"),
+        ("imam bayildi", "İmam Bayıldı"),
+        ("manti", "Mantı"),
+        ("Turkish dumplings", "Kayseri Mantısı"),
+        ("musakka", "Musakka"),
+        ("guvec", "Güveç"),
+        ("menemen", "Menemen"),
+        ("etli guvec", "Etli Güveç"),
+        ("lahana sarma", "Lahana Sarması"),
+        ("icli kofte", "İçli Köfte")
     ],
-    "cute_poses": [
-        "cat loaf", "sleeping cat", "cute kitten", "fluffy kitten", "cat eyes close up",
-        "funny cat", "playful cat", "cat in box", "cat yawning", "cat looking at camera", "cat stretching",
-        "cat portrait", "cat whiskers", "feline", "domestic cat", "kitty cat", "cat face"
+    "breakfast_and_meze": [
+        ("Turkish breakfast", "Serpme Kahvaltı"),
+        ("serpme kahvalti", "Köy Kahvaltısı"),
+        ("shakshuka meze", "Şakşuka"),
+        ("haydari", "Haydari"),
+        ("hummus", "Humus"),
+        ("acili ezme", "Acılı Ezme"),
+        ("patlican salatasi", "Patlıcan Salatası"),
+        ("muhammara", "Muhammara"),
+        ("Turkish tea cay", "Türk Çayı"),
+        ("Turkish coffee", "Türk Kahvesi"),
+        ("kaymak bal", "Bal Kaymak"),
+        ("Turkish cheese", "Beyaz Peynir")
+    ],
+    "desserts_and_sweets": [
+        ("baklava", "Baklava"),
+        ("Turkish baklava", "Fıstıklı Baklava"),
+        ("kunefe", "Künefe"),
+        ("kadayif", "Kadayıf"),
+        ("sutlac", "Fırın Sütlaç"),
+        ("Turkish rice pudding", "Sütlaç"),
+        ("kazandibi", "Kazandibi"),
+        ("lokum", "Lokum"),
+        ("Turkish delight", "Güllü Lokum"),
+        ("tulumba", "Tulumba Tatlısı"),
+        ("revani", "Revani"),
+        ("sekerpare", "Şekerpare"),
+        ("Maras dondurma", "Maraş Dondurması"),
+        ("helva", "Helva"),
+        ("irmik helvasi", "İrmik Helvası"),
+        ("trilece", "Trileçe"),
+        ("gullac", "Güllaç"),
+        ("kemalpasa tatlisi", "Kemalpaşa Tatlısı")
+    ],
+    "soups": [
+        ("mercimek corbasi", "Mercimek Çorbası"),
+        ("Turkish lentil soup", "Kırmızı Mercimek Çorbası"),
+        ("tarhana corbasi", "Tarhana Çorbası"),
+        ("ezogelin soup", "Ezogelin Çorbası"),
+        ("yayla corbasi", "Yayla Çorbası"),
+        ("iskembe corbasi", "İşkembe Çorbası"),
+        ("kelle paca", "Kelle Paça"),
+        ("Turkish soup", "Geleneksel Çorba")
+    ],
+    "general_turkish_cuisine": [
+        ("Turkish food", "Türk Mutfağı"),
+        ("Turkish cuisine", "Geleneksel Türk Yemeği"),
+        ("Turk yemekleri", "Nefis Türk Yemekleri"),
+        ("traditional Turkish dish", "Osmanlı Saray Mutfağı"),
+        ("Istanbul street food", "Sokak Lezzetleri"),
+        ("Turkish restaurant table", "Ziyafet Sofrası")
     ]
 }
 
@@ -95,17 +178,13 @@ def main():
 
     import argparse
     import shutil
-    parser = argparse.ArgumentParser(description="Download cat photos via Pexels API")
-    parser.add_argument("--clean", action="store_true", help="Backup and clear existing photos directory for a fresh cat download")
+    parser = argparse.ArgumentParser(description="Download Turkish Food photos via Pexels API")
+    parser.add_argument("--clean", action="store_true", help="Clear existing photos directory for a fresh download")
     args = parser.parse_args()
 
     if args.clean and os.path.exists(PHOTOS_DIR) and os.listdir(PHOTOS_DIR):
-        backup_dir = os.path.join(BASE_DIR, "photos_cheese_backup")
-        if not os.path.exists(backup_dir):
-            print(f"Moving existing photos to {backup_dir}...")
-            shutil.move(PHOTOS_DIR, backup_dir)
-        else:
-            print(f"Backup {backup_dir} already exists.")
+        print("Cleaning photos directory...")
+        shutil.rmtree(PHOTOS_DIR)
 
     os.makedirs(PHOTOS_DIR, exist_ok=True)
     headers = {"Authorization": API_KEY}
@@ -128,6 +207,7 @@ def main():
     seen_ids = set(existing)
 
     print(f"Target: {TARGET_COUNT} | Existing: {downloaded}")
+
     if downloaded >= TARGET_COUNT:
         print("Target already reached.")
         return
@@ -149,24 +229,23 @@ def main():
         for pid in done_keys:
             del pending[pid]
 
-    # Flatten search terms in order: Fat cats first, then breeds, colors, cute poses
+    # Flatten search terms
     search_queue = []
-    for category, terms in SEARCH_CATEGORIES.items():
-        is_fat = (category == "fat_cats")
-        for term in terms:
-            search_queue.append((term, category, is_fat))
+    for category, items in SEARCH_CATEGORIES.items():
+        for query_term, dish_name in items:
+            search_queue.append((query_term, dish_name, category))
 
-    for term, category, is_fat in search_queue:
+    for term, dish_name, category in search_queue:
         if downloaded >= TARGET_COUNT:
             break
 
         page = 1
         empty_streak = 0
-        cat_badge = "[FAT CATS]" if is_fat else f"[{category.upper()}]"
-        print(f"\n{cat_badge} Searching: '{term}' (Downloaded: {downloaded}/{TARGET_COUNT})")
+        badge = f"[{category.upper()}]"
+        print(f"\n{badge} Searching: '{term}' ({dish_name}) - (Downloaded: {downloaded}/{TARGET_COUNT})")
 
         term_photos = 0
-        max_per_term = 300 if is_fat else 240
+        max_per_term = 200
         while empty_streak < 2 and term_photos < max_per_term and (downloaded + len(pending)) < (TARGET_COUNT + 200):
             data = fetch_page(term, page, headers)
             if not data or not data.get("photos"):
@@ -182,10 +261,11 @@ def main():
                     pending[pid] = executor.submit(download_image, pid, item["src"]["tiny"])
                     metadata[str(pid)] = {
                         "term": term,
+                        "dish_name": dish_name,
                         "category": category,
-                        "is_fat": is_fat,
                         "width": item.get("width"),
                         "height": item.get("height"),
+                        "alt": item.get("alt", ""),
                         "url": item.get("url")
                     }
                     new_photos += 1
@@ -207,7 +287,7 @@ def main():
 
     # Save metadata
     with open(METADATA_FILE, "w", encoding="utf-8") as f:
-        json.dump(metadata, f, indent=2)
+        json.dump(metadata, f, indent=2, ensure_ascii=False)
 
     total_photos = len([f for f in os.listdir(PHOTOS_DIR) if f.endswith(".jpg")])
     print(f"Finished. Total photos in {PHOTOS_DIR}: {total_photos}")

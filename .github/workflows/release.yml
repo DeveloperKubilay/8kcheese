@@ -7,9 +7,9 @@ on:
   workflow_dispatch:
     inputs:
       tag_name:
-        description: 'Release tag name (e.g. v1.0.0)'
+        description: 'Release tag name (e.g. v3.0.0-turkish-food)'
         required: true
-        default: 'v1.0.0'
+        default: 'v3.0.0-turkish-food'
 
 jobs:
   release:
@@ -49,10 +49,10 @@ jobs:
 
       - name: Export Quality Tiers (If Output Exists)
         run: |
-          if [ -f "output/10000_cats.mp4" ]; then
+          if ls output/*_turkish_foods.mp4 1> /dev/null 2>&1; then
             python export_qualities.py --preset all
           else
-            echo "output/10000_cats.mp4 not found in workspace (expected for fresh clones)."
+            echo "Turkish foods master video not found in workspace (expected for fresh clones)."
           fi
 
       - name: Publish GitHub Release
@@ -60,13 +60,13 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch'
         with:
           tag_name: ${{ github.event.inputs.tag_name || github.ref_name }}
-          name: Top 10,000 Cats Release ${{ github.event.inputs.tag_name || github.ref_name }}
+          name: Top 10,000 Turkish Foods Release ${{ github.event.inputs.tag_name || github.ref_name }}
           draft: false
           prerelease: false
           files: |
-            output/cats-50mb.mp4
-            output/cats-100mb.mp4
-            output/cats-full.mp4
+            output/turkish-food-50mb.mp4
+            output/turkish-food-100mb.mp4
+            output/turkish-food-full.mp4
             assets/preview.gif
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

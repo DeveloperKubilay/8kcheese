@@ -7,10 +7,9 @@ import argparse
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 STEPS = [
-    ("download", "downloader.py", "Download Cat Images (Pexels API)"),
-    ("classify", "classifier.py", "AI Verify & Chonk Sorter (YOLOv8 ONNX)"),
-    ("frames", "frame_builder.py", "Build Animation Frames"),
-    ("video", "video_builder.py", "Render & Concatenate Cat Video"),
+    ("download", "downloader.py", "Download Turkish Food Images (Pexels API)"),
+    ("classify", "classifier.py", "AI Food Verification & Deliciousness Sorter (Swin Food ONNX)"),
+    ("video", "video_builder.py", "Render & Concatenate Turkish Foods Video"),
 ]
 
 
@@ -35,18 +34,16 @@ def run_step(script_name, label, extra_args=None):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Run the 10,000 Cats video generation pipeline.")
+    parser = argparse.ArgumentParser(description="Run the 10,000 Turkish Foods video generation pipeline.")
     parser.add_argument("--skip-download", action="store_true", help="Skip image downloading")
     parser.add_argument("--skip-classify", action="store_true", help="Skip classification/verification")
-    parser.add_argument("--skip-frames", action="store_true", help="Skip frame generation")
     parser.add_argument("--skip-video", action="store_true", help="Skip video building")
-    parser.add_argument("--clean", action="store_true", help="Clean/backup existing photos and start a fresh cat pipeline")
+    parser.add_argument("--clean", action="store_true", help="Clean/backup existing photos and start a fresh pipeline")
     args = parser.parse_args()
 
     skip_map = {
         "download": args.skip_download,
         "classify": args.skip_classify,
-        "frames": args.skip_frames,
         "video": args.skip_video,
     }
 

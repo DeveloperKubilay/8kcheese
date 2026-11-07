@@ -6,42 +6,39 @@ import argparse
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(BASE_DIR, "output")
-SOURCE_FILE = os.path.join(OUTPUT_DIR, "10000_cats.mp4")
-LEGACY_SOURCE_FILE = os.path.join(OUTPUT_DIR, "10000_cheese.mp4")
+SOURCE_FILE = os.path.join(OUTPUT_DIR, "10000_turkish_foods.mp4")
 ASSETS_DIR = os.path.join(BASE_DIR, "assets")
 
 PRESETS = {
     "compact": {
-        "filename": "cats-50mb.mp4",
+        "filename": "turkish-food-50mb.mp4",
         "crf": "48",
         "preset": "veryfast",
         "desc": "Ultra-compact build (~50MB)"
     },
     "standard": {
-        "filename": "cats-100mb.mp4",
+        "filename": "turkish-food-100mb.mp4",
         "crf": "33",
         "preset": "veryfast",
         "desc": "Standard balance (~100MB)"
     },
     "full": {
-        "filename": "cats-full.mp4",
+        "filename": "turkish-food-full.mp4",
         "crf": "35",
         "preset": "veryfast",
-        "desc": "Master build (~181MB)"
+        "desc": "Master build (~180MB)"
     }
 }
 
 
 def get_active_source():
     if os.path.exists(OUTPUT_DIR):
-        cat_videos = [f for f in os.listdir(OUTPUT_DIR) if f.endswith("_cats.mp4") and os.path.isfile(os.path.join(OUTPUT_DIR, f))]
-        if cat_videos:
-            cat_videos.sort(key=lambda x: os.path.getsize(os.path.join(OUTPUT_DIR, x)), reverse=True)
-            return os.path.join(OUTPUT_DIR, cat_videos[0])
+        food_videos = [f for f in os.listdir(OUTPUT_DIR) if f.endswith("_turkish_foods.mp4") and os.path.isfile(os.path.join(OUTPUT_DIR, f))]
+        if food_videos:
+            food_videos.sort(key=lambda x: os.path.getsize(os.path.join(OUTPUT_DIR, x)), reverse=True)
+            return os.path.join(OUTPUT_DIR, food_videos[0])
     if os.path.exists(SOURCE_FILE):
         return SOURCE_FILE
-    if os.path.exists(LEGACY_SOURCE_FILE):
-        return LEGACY_SOURCE_FILE
     return SOURCE_FILE
 
 
@@ -72,7 +69,7 @@ def create_preview():
     for tier, cfg in PRESETS.items():
         tier_video = os.path.join(OUTPUT_DIR, cfg["filename"])
         if os.path.exists(tier_video):
-            tier_gif = os.path.join(ASSETS_DIR, f"preview-{cfg['filename'].split('.')[0].replace('cats-', '')}.gif")
+            tier_gif = os.path.join(ASSETS_DIR, f"preview-{cfg['filename'].split('.')[0].replace('turkish-food-', '')}.gif")
             cmd_tier = [
                 "ffmpeg", "-y",
                 "-ss", "00:00:10", "-t", "15",
@@ -118,7 +115,7 @@ def export_preset(name):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Export release tiers and preview for cat video.")
+    parser = argparse.ArgumentParser(description="Export release tiers and preview for Turkish food video.")
     parser.add_argument("--preset", choices=["compact", "standard", "full", "all"], default="all")
     parser.add_argument("--preview", action="store_true", help="Only generate preview gif")
     args = parser.parse_args()

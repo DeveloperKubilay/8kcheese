@@ -2,32 +2,31 @@ import os
 import sys
 import subprocess
 import requests
-import ssl
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(BASE_DIR, "output")
 ASSETS_DIR = os.path.join(BASE_DIR, "assets")
 REPO = "DeveloperKubilay/8kcheese"
-TAG_NAME = "v2.0.0-cats"
-TARGET_BRANCH = "cats"
-RELEASE_NAME = "Top 10,000 Cats - Initial Release (v2.0.0)"
-RELEASE_BODY = """## 🐱 Top 10,000 Cats (7,752 Verified Cats)
+TAG_NAME = "v3.0.0-turkish-food"
+TARGET_BRANCH = "turkish-food"
+RELEASE_NAME = "Top 10,000 Turkish Foods - Initial Release (v3.0.0)"
+RELEASE_BODY = """## 🍲 Top 10,000 Turkish Foods (En İyi Türk Yemekleri)
 
-An automated countdown video featuring 7,752 AI-verified cats sorted by chonkiness (fat cats first!), transitioning through classic blue countdown screens and smooth cross-dissolves.
+An automated countdown video celebrating the rich culinary heritage of Turkish cuisine, featuring thousands of AI-verified dishes (kebabs, baklava, lahmacun, pide, home stews, and street foods) sorted by appetizing deliciousness, transitioning through classic blue countdown screens and smooth cross-dissolves.
 
 ### 📦 Available Video Tiers:
-- **cats-100mb.mp4** (~107 MB): Balanced 15-hour countdown for everyday playback.
-- **cats-50mb.mp4** (~46 MB): Ultra-compact build.
-- **cats-full.mp4** (~181 MB): Master render quality.
+- **turkish-food-100mb.mp4** (~100 MB): Balanced 15-hour countdown for everyday playback.
+- **turkish-food-50mb.mp4** (~50 MB): Ultra-compact build.
+- **turkish-food-full.mp4** (~180 MB): Master render quality.
 - **preview.gif** (~1.8 MB): 15-second animated preview sample.
 
-Verified with local YOLOv8n object detection (100% real cats guarantee).
+Verified with local Swin Transformer Food-101 AI (100% real food guarantee).
 """
 
 FILES_TO_UPLOAD = [
-    os.path.join(OUTPUT_DIR, "cats-100mb.mp4"),
-    os.path.join(OUTPUT_DIR, "cats-50mb.mp4"),
-    os.path.join(OUTPUT_DIR, "cats-full.mp4"),
+    os.path.join(OUTPUT_DIR, "turkish-food-100mb.mp4"),
+    os.path.join(OUTPUT_DIR, "turkish-food-50mb.mp4"),
+    os.path.join(OUTPUT_DIR, "turkish-food-full.mp4"),
     os.path.join(ASSETS_DIR, "preview.gif"),
     os.path.join(ASSETS_DIR, "preview-50mb.gif"),
     os.path.join(ASSETS_DIR, "preview-100mb.gif"),

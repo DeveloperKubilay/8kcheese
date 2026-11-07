@@ -12,9 +12,9 @@ VERIFIED_DIR = os.path.join(BASE_DIR, "verified")
 BLUE_DIR = os.path.join(BASE_DIR, "blue_screens")
 CLIPS_DIR = os.path.join(BASE_DIR, "clips")
 OUTPUT_DIR = os.path.join(BASE_DIR, "output")
-OUTPUT_FILE = os.path.join(OUTPUT_DIR, "10000_cats.mp4")
+OUTPUT_FILE = os.path.join(OUTPUT_DIR, "10000_turkish_foods.mp4")
 CONCAT_FILE = os.path.join(BASE_DIR, "clips_list.txt")
-VERIFIED_CATS_FILE = os.path.join(BASE_DIR, "verified_cats.json")
+VERIFIED_FOOD_FILE = os.path.join(BASE_DIR, "verified_food.json")
 
 FRAME_SIZE = (128, 128)
 BLUE_COLOR = (0, 100, 200)
@@ -40,26 +40,54 @@ def get_font_path():
 
 
 def create_blue_screen(task):
-    number, font_path, path = task
+    number, dish_name, font_path, path = task
     if os.path.exists(path) and os.path.getsize(path) > 500:
         return
+
     try:
-        font = ImageFont.truetype(font_path, 14) if font_path else ImageFont.load_default()
+        font_main = ImageFont.truetype(font_path, 13) if font_path else ImageFont.load_default()
+        font_sub = ImageFont.truetype(font_path, 11) if font_path else ImageFont.load_default()
     except Exception:
-        font = ImageFont.load_default()
+        font_main = ImageFont.load_default()
+        font_sub = ImageFont.load_default()
 
     img = Image.new("RGB", FRAME_SIZE, BLUE_COLOR)
     draw = ImageDraw.Draw(img)
-    text = f"Number: {number}"
-    bbox = draw.textbbox((0, 0), text, font=font)
-    tw, th = bbox[2] - bbox[0], bbox[3] - bbox[1]
-    x = (128 - tw) // 2
-    y = (128 - th) // 2
-    for dx in [-1, 0, 1]:
-        for dy in [-1, 0, 1]:
-            if dx or dy:
-                draw.text((x + dx, y + dy), text, fill=(0, 0, 0), font=font)
-    draw.text((x, y), text, fill=(255, 255, 255), font=font)
+
+    text1 = f"Number: {number}"
+    text2 = dish_name[:16] if dish_name and dish_name != "Turkish Food" else ""
+
+    if text2:
+        bbox1 = draw.textbbox((0, 0), text1, font=font_main)
+        bbox2 = draw.textbbox((0, 0), text2, font=font_sub)
+        w1, h1 = bbox1[2] - bbox1[0], bbox1[3] - bbox1[1]
+        w2, h2 = bbox2[2] - bbox2[0], bbox2[3] - bbox2[1]
+
+        y1 = (128 - (h1 + h2 + 6)) // 2
+        y2 = y1 + h1 + 6
+        x1 = (128 - w1) // 2
+        x2 = (128 - w2) // 2
+
+        # Shadow
+        for dx in [-1, 0, 1]:
+            for dy in [-1, 0, 1]:
+                if dx or dy:
+                    draw.text((x1 + dx, y1 + dy), text1, fill=(0, 0, 0), font=font_main)
+                    draw.text((x2 + dx, y2 + dy), text2, fill=(0, 0, 0), font=font_sub)
+
+        draw.text((x1, y1), text1, fill=(255, 255, 255), font=font_main)
+        draw.text((x2, y2), text2, fill=(255, 220, 100), font=font_sub)
+    else:
+        bbox = draw.textbbox((0, 0), text1, font=font_main)
+        tw, th = bbox[2] - bbox[0], bbox[3] - bbox[1]
+        x = (128 - tw) // 2
+        y = (128 - th) // 2
+        for dx in [-1, 0, 1]:
+            for dy in [-1, 0, 1]:
+                if dx or dy:
+                    draw.text((x + dx, y + dy), text1, fill=(0, 0, 0), font=font_main)
+        draw.text((x, y), text1, fill=(255, 255, 255), font=font_main)
+
     img.save(path)
 
 
@@ -68,11 +96,11 @@ def make_clip(task):
     if os.path.exists(clip_path) and os.path.getsize(clip_path) > 1000:
         return True
 
-    # Original classic timing:
+    # Classic timing:
     # 0s - 1s: Fade in to Number card
-    # 1s - 3s: Number card holds for 2s ("2sn yazı duruo")
-    # 3s - 4s: 1s crossfade transition into Cat photo
-    # 4s - 6s: Cat photo holds for 2s
+    # 1s - 3s: Number card holds for 2s
+    # 3s - 4s: 1s crossfade transition into Food photo
+    # 4s - 6s: Food photo holds for 2s
     # 6s - 7s: 1s fade out to black
     filter_complex = (
         f"[0:v]scale=128:128,format=yuv420p,fade=t=in:st=0:d={FADE_DUR}[v0];"
@@ -83,11 +111,13 @@ def make_clip(task):
 
     cmd = [
         "ffmpeg", "-y",
+        "-threads", "1",
         "-loop", "1", "-t", str(HOLD + FADE_DUR), "-i", blue_path,
         "-loop", "1", "-t", str(HOLD + FADE_DUR), "-i", photo_path,
         "-filter_complex", filter_complex,
         "-t", str(HOLD + HOLD + FADE_DUR),
         "-c:v", "libx264", "-preset", "ultrafast", "-crf", "35",
+        "-threads", "1",
         "-pix_fmt", "yuv420p",
         clip_path
     ]
@@ -97,24 +127,32 @@ def make_clip(task):
 
 def get_sorted_photos(limit=None):
     photos = [f for f in os.listdir(VERIFIED_DIR) if f.endswith(".jpg")]
-    if not os.path.exists(VERIFIED_CATS_FILE):
+    dish_names = {}
+
+    if not os.path.exists(VERIFIED_FOOD_FILE):
         photos.sort()
-        return photos[:limit] if limit else photos
+        return [(p, "") for p in (photos[:limit] if limit else photos)]
 
     try:
-        with open(VERIFIED_CATS_FILE, "r", encoding="utf-8") as f:
-            verified_cats = json.load(f)
+        with open(VERIFIED_FOOD_FILE, "r", encoding="utf-8") as f:
+            verified_food = json.load(f)
 
+        for p in photos:
+            dish_names[p] = verified_food.get(p, {}).get("dish_name", "")
+
+        # Sort so deliciousness score ascends towards #1
+        # The #1 spot in the countdown has the highest deliciousness score!
         def sort_key(name):
-            data = verified_cats.get(name, {})
-            return data.get("chonk_score", 0.0)
+            data = verified_food.get(name, {})
+            return data.get("deliciousness_score", 0.0)
 
-        photos.sort(key=sort_key, reverse=True)
+        photos.sort(key=sort_key)
     except Exception as e:
-        print(f"Warning: Could not sort by chonk_score ({e}), falling back to alphabetical.")
+        print(f"Warning: Could not sort by deliciousness_score ({e}), falling back to alphabetical.")
         photos.sort()
 
-    return photos[:limit] if limit else photos
+    selected = photos[-limit:] if limit else photos
+    return [(p, dish_names.get(p, "")) for p in selected]
 
 
 def check_gpu_support():
@@ -127,8 +165,8 @@ def check_gpu_support():
 
 
 def main():
-    parser = argparse.ArgumentParser(description="TURBO Multi-Core Cats Video Generator")
-    parser.add_argument("--limit", type=int, default=None, help="Optional limit for cats countdown (default: all verified cats)")
+    parser = argparse.ArgumentParser(description="TURBO Multi-Core Turkish Foods Video Generator")
+    parser.add_argument("--limit", type=int, default=None, help="Optional limit for food countdown (default: all verified foods)")
     parser.add_argument("--workers", type=int, default=None, help="Parallel worker processes (default: all CPU cores)")
     parser.add_argument("--no-gpu", action="store_true", help="Disable AMD AMF GPU encoding and use CPU libx264")
     parser.add_argument("--clean", action="store_true", help="Clean clips and transition cards cache to regenerate all clips")
@@ -151,38 +189,41 @@ def main():
         print(f"Error: {VERIFIED_DIR} directory does not exist.")
         sys.exit(1)
 
-    photos = get_sorted_photos(limit=args.limit)
-    total = len(photos)
+    photo_tuples = get_sorted_photos(limit=args.limit)
+    total = len(photo_tuples)
 
-    if not photos:
+    if not photo_tuples:
         print(f"No photos found in {VERIFIED_DIR}")
         sys.exit(1)
 
-    output_file = os.path.join(OUTPUT_DIR, f"{total}_cats.mp4")
+    output_file = os.path.join(OUTPUT_DIR, f"{total}_turkish_foods.mp4")
 
     cores = args.workers or multiprocessing.cpu_count()
     use_gpu = not args.no_gpu and check_gpu_support()
 
-    print(f"[CLASSIC CATS VIDEO BUILDER]")
+    print(f"[CLASSIC TURKISH FOODS VIDEO BUILDER]")
     print(f"   CPU Cores: {cores} parallel processes")
     print(f"   GPU Acceleration: {'AMD AMF Enabled' if use_gpu else 'CPU libx264 ultrafast'}")
-    print(f"   Pacing: 7.0s/cat (1s fade in, 2s blue card hold, 1s crossfade, 2s cat hold, 1s fade out)")
-    print(f"   Total items: {total} ALL VERIFIED CATS (Countdown {total} -> 1, Fat cats first!)")
+    print(f"   Pacing: 7.0s/food (1s fade in, 2s blue card hold, 1s crossfade, 2s food hold, 1s fade out)")
+    print(f"   Total items: {total} ALL VERIFIED TURKISH FOODS (Countdown {total} -> 1)")
     print(f"   Target video: {output_file}")
 
     font_path = get_font_path()
 
     # 1. Generate blue transition cards in parallel
-    print("\n[Stage 1/3] Generating cat countdown cards in parallel...")
-    card_tasks = [(total - i, font_path, os.path.join(BLUE_DIR, f"{i+1:05d}.png")) for i in range(total)]
+    print("\n[Stage 1/3] Generating food countdown cards in parallel...")
+    card_tasks = [
+        (total - i, photo_tuples[i][1], font_path, os.path.join(BLUE_DIR, f"{i+1:05d}.png"))
+        for i in range(total)
+    ]
     with ProcessPoolExecutor(max_workers=cores) as executor:
         list(executor.map(create_blue_screen, card_tasks))
 
-    # 2. Render micro-clips in parallel using all 12 cores + GPU
+    # 2. Render micro-clips in parallel using all cores + GPU
     print("\n[Stage 2/3] Rendering video micro-clips in parallel...")
     clip_tasks = [
         (
-            os.path.join(VERIFIED_DIR, photos[i]),
+            os.path.join(VERIFIED_DIR, photo_tuples[i][0]),
             os.path.join(BLUE_DIR, f"{i+1:05d}.png"),
             os.path.join(CLIPS_DIR, f"{i+1:05d}.mp4"),
             use_gpu
@@ -200,8 +241,8 @@ def main():
                 print(f"[{count}/{total}] clips rendered (failed: {failed})")
 
     # 3. Concatenate all clips
-    print("\n[Stage 3/3] Concatenating clips into final 10,000 Cats video...")
-    with open(CONCAT_FILE, "w") as f:
+    print("\n[Stage 3/3] Concatenating clips into final Turkish Foods video...")
+    with open(CONCAT_FILE, "w", encoding="utf-8") as f:
         for i in range(total):
             clip_rel = f"clips/{i+1:05d}.mp4"
             if os.path.exists(os.path.join(BASE_DIR, clip_rel)):
